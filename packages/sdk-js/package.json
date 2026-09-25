@@ -1,0 +1,53 @@
+{
+  "name": "@quellenkontor/sdk",
+  "version": "0.1.0",
+  "description": "Offizielles SDK für die Quellenkontor-API: geprüfte HR-Daten mit Quelle und Gültigkeit. German HR reference data with source and validity: minimum wage, social security, public holidays.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "hr",
+    "mindestlohn",
+    "sozialversicherung",
+    "feiertage",
+    "api",
+    "mcp",
+    "lohn",
+    "germany",
+    "german",
+    "minimum-wage",
+    "payroll",
+    "social-security",
+    "public-holidays",
+    "hr-data"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicksAdvisory/quellenkontor-sdk.git",
+    "directory": "packages/sdk-js"
+  },
+  "bugs": {
+    "url": "https://github.com/NicksAdvisory/quellenkontor-sdk/issues"
+  },
+  "homepage": "https://quellenkontor.dev/docs/sdk-javascript",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

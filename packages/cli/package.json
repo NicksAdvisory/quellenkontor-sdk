@@ -1,0 +1,49 @@
+{
+  "name": "@quellenkontor/cli",
+  "version": "0.1.0",
+  "description": "Kommandozeile für die Quellenkontor-API: HR-Daten im Terminal abfragen und als CSV oder JSON exportieren. Query German HR reference data from the terminal, export as CSV or JSON.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "qk": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.3"
+  },
+  "keywords": [
+    "hr",
+    "cli",
+    "mindestlohn",
+    "feiertage",
+    "api",
+    "germany",
+    "german",
+    "minimum-wage",
+    "payroll",
+    "social-security",
+    "public-holidays",
+    "hr-data"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicksAdvisory/quellenkontor-sdk.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/NicksAdvisory/quellenkontor-sdk/issues"
+  },
+  "homepage": "https://quellenkontor.dev/docs/cli",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@quellenkontor/sdk": "0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

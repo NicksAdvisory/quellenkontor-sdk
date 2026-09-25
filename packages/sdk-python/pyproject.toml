@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quellenkontor"
+version = "0.1.0"
+description = "Offizielles SDK für die Quellenkontor-API: geprüfte HR-Daten für Deutschland mit Quelle und Gültigkeit. German HR reference data API client."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["hr", "mindestlohn", "sozialversicherung", "feiertage", "api", "lohn", "germany", "german", "minimum-wage", "payroll", "social-security", "public-holidays", "hr-data"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: German",
+  "Topic :: Office/Business",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://quellenkontor.dev"
+Documentation = "https://quellenkontor.dev/docs/sdk-python"
+Changelog = "https://quellenkontor.dev/docs/aenderungen"
+Repository = "https://github.com/NicksAdvisory/quellenkontor-sdk"
+Issues = "https://github.com/NicksAdvisory/quellenkontor-sdk/issues"
+
+[tool.setuptools]
+packages = ["quellenkontor"]
+
+[tool.setuptools.package-data]
+# Offline-Stand für den Fallback ohne Verbindung (Quellenkontor(..., offline=True)), siehe
+# scripts/offline-snapshot.mjs in der App.
+quellenkontor = ["offline_daten.json"]
