@@ -33,6 +33,6 @@ qk datensaetze
 
 `qk login` speichert den Schlüssel in `~/.config/quellenkontor/config.json`. Die Umgebungsvariable `QK_KEY` hat Vorrang, auf Servern und in CI-Läufen ist das der bessere Weg. `qk logout` entfernt den Schlüssel von diesem Rechner, im Konto bleibt er gültig, bis du ihn dort sperrst.
 
-Kostenloser Schlüssel mit 1.000 Abfragen im Monat: https://quellenkontor.dev/anmelden
+Kostenloser Schlüssel mit 500 Abfragen im Monat: https://quellenkontor.dev/anmelden
 
 Dokumentation: https://quellenkontor.dev/docs/cli

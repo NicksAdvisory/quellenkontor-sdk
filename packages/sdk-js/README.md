@@ -27,6 +27,6 @@ const verlauf = await qk.hr.verlauf("mindestlohn");
 
 Fehler der API kommen als `QuellenkontorFehler` mit `status`, `code` und `parameter`. Bei Netzfehlern und den Status 502, 503 und 504 wiederholt das SDK die Anfrage zweimal.
 
-Kostenloser Schlüssel mit 1.000 Abfragen im Monat: https://quellenkontor.dev/anmelden
+Kostenloser Schlüssel mit 500 Abfragen im Monat: https://quellenkontor.dev/anmelden
 
 Dokumentation: https://quellenkontor.dev/docs/sdk-javascript
