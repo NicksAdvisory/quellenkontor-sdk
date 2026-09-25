@@ -9,7 +9,7 @@
 
 import { OFFLINE_DATEN } from "./offline-daten.js";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 const STANDARD_BASIS = "https://api.quellenkontor.dev/v1";
 
 export type Quelle = { titel: string; url: string };
@@ -155,6 +155,12 @@ export type Optionen = {
   timeoutMs?: number;
   /** Wiederholungen bei Netzfehlern und Status 502, 503, 504, Standard 2 */
   wiederholungen?: number;
+  /**
+   * Höchstens so viele Anfragen je Sekunde schickt diese Instanz, weitere warten kurz. Standard 8, knapp unter
+   * der Grenze der API (10 je Sekunde). Antwortet die API mit 429 zu_schnell, wartet das SDK die Zeit aus
+   * Retry-After ab und fragt noch einmal. 0 schaltet die Bremse ab.
+   */
+  maxProSekunde?: number;
   fetch?: typeof fetch;
   /**
    * Zwischenspeicher im Speicher dieser Instanz: eine unveränderte Antwort kommt ohne erneute Anfrage
@@ -274,6 +280,8 @@ export class Quellenkontor {
   private readonly cacheTtlMs: number;
   private readonly offlineAktiv: boolean;
   private readonly cache = new Map<string, CacheEintrag>();
+  private readonly abstandMs: number;
+  private naechsterStart = 0;
 
   constructor(apiKeyOderOptionen?: string | Optionen, optionen: Optionen = {}) {
     const o = typeof apiKeyOderOptionen === "object" ? apiKeyOderOptionen : { ...optionen, apiKey: apiKeyOderOptionen ?? optionen.apiKey };
@@ -285,6 +293,17 @@ export class Quellenkontor {
     this.cacheAktiv = o.cache ?? true;
     this.cacheTtlMs = o.cacheTtlMs ?? 5 * 60_000;
     this.offlineAktiv = o.offline ?? true;
+    const proSekunde = o.maxProSekunde ?? 8;
+    this.abstandMs = proSekunde > 0 ? 1000 / proSekunde : 0;
+  }
+
+  /** Verteilt Anfragen gleichmäßig, damit keine Spitzen entstehen */
+  private async takt(): Promise<void> {
+    if (!this.abstandMs) return;
+    const jetzt = Date.now();
+    const start = Math.max(jetzt, this.naechsterStart);
+    this.naechsterStart = start + this.abstandMs;
+    if (start > jetzt) await warte(start - jetzt);
   }
 
   /** Leert den Zwischenspeicher dieser Instanz, etwa nach einem bekannten neuen Wert (Webhook). */
@@ -310,14 +329,30 @@ export class Quellenkontor {
     if (bekannt?.etag) koepfe["If-None-Match"] = bekannt.etag;
 
     let letzterFehler: unknown;
+    let gebremst = 0;
     for (let versuch = 0; versuch <= this.wiederholungen; versuch++) {
       if (versuch > 0) await warte(300 * 2 ** (versuch - 1));
+      await this.takt();
       let res: Response;
       try {
         res = await this.f(url, { headers: koepfe, signal: AbortSignal.timeout(this.timeout) });
       } catch (e) {
         letzterFehler = e;
         continue;
+      }
+      // Zu schnell (nicht Kontingent): Retry-After abwarten und dieselbe Anfrage noch einmal, bis zu 5 Mal
+      if (res.status === 429 && gebremst < 5) {
+        const d = (await res.clone().json().catch(() => ({}))) as { fehler?: { code?: string } };
+        if (d.fehler?.code === "zu_schnell") {
+          gebremst++;
+          versuch--;
+          await warte(Math.min(30, Number(res.headers.get("retry-after")) || 1) * 1000);
+          continue;
+        }
+      }
+      // Vercels Schutzschicht prüft einen Browser: für Programme nicht lösbar, klare Meldung statt HTML
+      if (res.status === 403 && res.headers.get("x-vercel-mitigated")) {
+        throw new QuellenkontorFehler("Die Schutzschicht vor der API hat diese Adresse vorübergehend ausgebremst, meist nach sehr vielen Anfragen in kurzer Zeit. Bitte langsamer abfragen (maxProSekunde) und in einigen Minuten erneut versuchen, oder hello@quellenkontor.dev schreiben.", 403, "ausgebremst");
       }
       if ([502, 503, 504].includes(res.status) && versuch < this.wiederholungen) continue;
       // Unverändert seit der gemerkten ETag: die gecachte Antwort gilt weiter, ohne dass es zählt

@@ -1,6 +1,6 @@
 {
   "name": "@quellenkontor/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Kommandozeile für die Quellenkontor-API: HR-Daten im Terminal abfragen und als CSV oder JSON exportieren. Query German HR reference data from the terminal, export as CSV or JSON.",
   "license": "MIT",
   "type": "module",
@@ -44,7 +44,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@quellenkontor/sdk": "0.1.0"
+    "@quellenkontor/sdk": "0.1.1"
   },
   "devDependencies": {
     "typescript": "^5"
