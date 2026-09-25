@@ -36,6 +36,9 @@
   "bugs": {
     "url": "https://github.com/NicksAdvisory/quellenkontor-sdk/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://quellenkontor.dev/docs/cli",
   "scripts": {
     "build": "tsc -p tsconfig.json"

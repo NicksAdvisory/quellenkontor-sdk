@@ -128,8 +128,8 @@ async function login() {
 async function main() {
   const { positionen, optionen } = argumente(process.argv.slice(2));
   const befehl = positionen[0];
-  if (!befehl || befehl === "hilfe" || optionen.help || optionen.hilfe) { console.log(HILFE); return; }
   if (befehl === "version" || optionen.version) { console.log(VERSION); return; }
+  if (!befehl || befehl === "hilfe" || optionen.help || optionen.hilfe) { console.log(HILFE); return; }
   if (befehl === "login") return login();
   if (befehl === "logout") { await rm(DATEI, { force: true }); console.log("Schlüssel von diesem Rechner entfernt. Im Konto bleibt er gültig, bis du ihn dort sperrst."); return; }
 
