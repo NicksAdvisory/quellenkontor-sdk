@@ -1,20 +1,41 @@
 {
   "name": "@quellenkontor/sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Offizielles SDK für die Quellenkontor-API: geprüfte HR-Daten mit Quelle und Gültigkeit. German HR reference data with source and validity: minimum wage, social security, public holidays.",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./offline": {
+      "import": {
+        "types": "./dist/offline.d.ts",
+        "default": "./dist/offline.js"
+      },
+      "require": {
+        "types": "./dist/cjs/offline.d.ts",
+        "default": "./dist/cjs/offline.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
+  "sideEffects": false,
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=18"
@@ -48,7 +69,9 @@
   },
   "homepage": "https://quellenkontor.dev/docs/sdk-javascript",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "prepublishOnly": "npm run build && npm test"
   },
   "devDependencies": {
     "typescript": "^5"

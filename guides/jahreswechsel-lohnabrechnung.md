@@ -42,7 +42,7 @@ liefert unter anderem `bbg_kv_monat: 5812.5`, `bbg_rv_west_monat: 8450` und `jae
 
 ## Vor dem Jahreswechsel testen
 
-Solange die Werte für das neue Jahr noch nicht verkündet sind, antwortet die API für Januar mit `kein_wert`. Das ist gewollt: Deine Software sieht, dass sie noch nicht mit dem neuen Jahr rechnen kann, statt still mit alten Zahlen weiterzurechnen. Sobald die Verordnung verkündet ist, liefert dieselbe Abfrage die neuen Werte.
+Solange die Werte für das neue Jahr noch nicht verkündet sind, liefert die API für Januar die betroffenen Felder als `null`, dazu `status: "ausstehend"`, den zuletzt gültigen Wert in `letzter_wert` und in `erwartet`, wann die Verkündung ansteht. Das ist gewollt: Deine Software sieht, dass sie noch nicht mit dem neuen Jahr rechnen kann, statt still mit alten Zahlen weiterzurechnen. Sobald die Verordnung verkündet ist, liefert dieselbe Abfrage die neuen Werte.
 
 Mit dem Tarif Pro bekommst du einen [Webhook](https://quellenkontor.dev/docs/webhooks), sobald die neuen Werte eingetragen sind.
 

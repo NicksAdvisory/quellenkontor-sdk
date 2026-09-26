@@ -78,7 +78,7 @@ Parameter und Felder jedes Datensatzes stehen in der [Referenz](https://quellenk
 
 ## Loslegen
 
-Dieses Repository enthält die offiziellen Clients. Sie haben keine Abhängigkeiten und sprechen dieselbe API.
+Dieses Repository enthält die offiziellen Clients. Sie kommen ohne Pflicht-Abhängigkeiten aus (nur der asynchrone Python-Client braucht `httpx`, `pip install "quellenkontor[async]"`) und sprechen dieselbe API.
 
 | Paket | Installation | Doku |
 |---|---|---|

@@ -1,34 +1,57 @@
+# Bauen mit: python -m build (nicht mit einem alten pip oder setup.py, sonst entsteht UNKNOWN-0.0.0)
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "quellenkontor"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Offizielles SDK für die Quellenkontor-API: geprüfte HR-Daten für Deutschland mit Quelle und Gültigkeit. German HR reference data API client."
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = ["hr", "mindestlohn", "sozialversicherung", "feiertage", "api", "lohn", "germany", "german", "minimum-wage", "payroll", "social-security", "public-holidays", "hr-data"]
 classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Natural Language :: German",
   "Topic :: Office/Business",
+  "Typing :: Typed",
 ]
 dependencies = []
+
+[project.optional-dependencies]
+# Asynchroner Client (quellenkontor.aio.AsyncQuellenkontor)
+async = ["httpx>=0.24"]
+# Nur für die Tests im Repository
+test = ["pytest>=7", "httpx>=0.24"]
 
 [project.urls]
 Homepage = "https://quellenkontor.dev"
 Documentation = "https://quellenkontor.dev/docs/sdk-python"
-Changelog = "https://quellenkontor.dev/docs/aenderungen"
+Changelog = "https://github.com/NicksAdvisory/quellenkontor-sdk/blob/main/packages/sdk-python/CHANGELOG.md"
 Repository = "https://github.com/NicksAdvisory/quellenkontor-sdk"
 Issues = "https://github.com/NicksAdvisory/quellenkontor-sdk/issues"
 
 [tool.setuptools]
 packages = ["quellenkontor"]
 
+[tool.setuptools.dynamic]
+version = { attr = "quellenkontor._version.__version__" }
+
 [tool.setuptools.package-data]
-# Offline-Stand für den Fallback ohne Verbindung (Quellenkontor(..., offline=True)), siehe
-# scripts/offline-snapshot.mjs in der App.
-quellenkontor = ["offline_daten.json"]
+# Offline-Stand für den Fallback ohne Verbindung (siehe scripts/offline-snapshot.mjs in der App) und die
+# Markierung für Typprüfer (PEP 561)
+quellenkontor = ["offline_daten.json", "py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

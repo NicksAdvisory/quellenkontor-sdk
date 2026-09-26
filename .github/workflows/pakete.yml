@@ -1,0 +1,83 @@
+# Vorlage für das öffentliche Repository NicksAdvisory/quellenkontor-sdk.
+#
+# Dort als .github/workflows/pakete.yml ablegen (im App-Repository liegt sie nur als Vorlage unter
+# packages/.github-vorlage/, damit sie hier nicht läuft). Prüft SDK, CLI und Python-SDK bei jedem Push
+# und Pull Request auf allen unterstützten Versionen. Veröffentlicht nichts: npm publish und twine upload
+# bleiben Handarbeit nach grünem Lauf (prepublishOnly baut und testet zusätzlich lokal).
+#
+# Pfade: Das öffentliche Repository spiegelt den Ordner packages/ (siehe "directory" in den package.json).
+
+name: Pakete prüfen
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  javascript:
+    name: SDK und CLI (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["18", "20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: SDK bauen und testen
+        working-directory: packages/sdk-js
+        run: |
+          npm install --no-package-lock --no-audit --no-fund
+          npm run build
+          npm test
+          npm pack
+
+      - name: CommonJS und ESM aus dem gebauten Paket laden
+        working-directory: packages/sdk-js
+        run: |
+          node -e "const s = require('@quellenkontor/sdk'); if (typeof s.Quellenkontor !== 'function') process.exit(1)"
+          node --input-type=module -e "import { Quellenkontor } from '@quellenkontor/sdk'; if (typeof Quellenkontor !== 'function') process.exit(1)"
+
+      - name: CLI gegen das eben gebaute SDK bauen und testen
+        working-directory: packages/cli
+        run: |
+          npm install --no-package-lock --no-save --no-audit --no-fund ../sdk-js/quellenkontor-sdk-*.tgz
+          npm run build
+          npm test
+
+  python:
+    name: Python-SDK (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Installieren und testen
+        working-directory: packages/sdk-python
+        run: |
+          python -m pip install --upgrade pip build
+          python -m pip install -e ".[test]"
+          python -m pytest -q
+
+      - name: Ohne httpx importierbar
+        working-directory: packages/sdk-python
+        run: |
+          python -m pip uninstall -y httpx
+          python -c "import quellenkontor; print(quellenkontor.__version__)"
+
+      - name: Wheel und sdist bauen
+        working-directory: packages/sdk-python
+        run: python -m build

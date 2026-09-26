@@ -39,7 +39,7 @@ Für jeden Datensatz gibt es ein Werkzeug, etwa `hr_mindestlohn`, `hr_rechengroe
 
 - relative Angaben wie „ab Juli“ in ein Datum umrechnen und dieses Datum nennen
 - nachfragen, wenn Angaben wie Bundesland oder Eintrittsdatum fehlen, statt zu raten
-- bei `kein_wert` sagen, dass der Wert noch nicht verkündet ist, statt zu schätzen
+- bei `status: "ausstehend"` oder dem Fehler `kein_wert` sagen, dass der Wert noch nicht verkündet ist, statt zu schätzen
 - immer die Quelle mit URL nennen
 
 Fragen, die ein Agent damit beantworten kann:

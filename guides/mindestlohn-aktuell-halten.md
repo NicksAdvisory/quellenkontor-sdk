@@ -43,7 +43,7 @@ async function pruefeStundenlohn(stundenlohn, abrechnungsmonat) {
 
 Jede Antwort nennt mit `vorheriger_wert` und `naechster_wert` die Nachbarn. Ist eine Erhöhung schon verkündet, steht sie in `naechster_wert`, bevor sie gilt. Den ganzen Verlauf seit 2015 liefert `/v1/hr/mindestlohn/verlauf`, im SDK `qk.hr.verlauf("mindestlohn")`.
 
-Werte, die noch nicht verkündet sind, gibt es nicht. Fragst du ein Datum ab, für das noch nichts festgelegt ist, kommt der Fehler `kein_wert` statt einer Schätzung.
+Werte, die noch nicht verkündet sind, gibt es nicht. Fragst du ein Datum ab, für das noch nichts festgelegt ist, stehen die Werte auf `null` und `status` auf `"ausstehend"`, statt einer Schätzung. `letzter_wert` nennt den zuletzt gültigen Betrag, `erwartet` den Stand der Verkündung.
 
 ## Automatisch benachrichtigt werden
 
